@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
+  name?: string;
   email: string;
   role: "admin";
 }
@@ -27,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
-      setUser({ email: ADMIN_EMAIL, role: "admin" });
+      setUser({ email: ADMIN_EMAIL, role: "admin", name: "Daniyaal Admin" });
     }
     setIsLoading(false);
   }, []);
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       const fakeToken = "mock-admin-token";
 
-      setUser({ email, role: "admin" });
+      setUser({ email, role: "admin", name: "Daniyaal Admin" });
       setToken(fakeToken);
       localStorage.setItem("token", fakeToken);
       return;

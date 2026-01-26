@@ -25,13 +25,13 @@ export function OrdersPage() {
   }, []);
 
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = 
+    const matchesSearch =
       order.id.toLowerCase().includes(search.toLowerCase()) ||
       order.customer.name.toLowerCase().includes(search.toLowerCase()) ||
       order.customer.email.toLowerCase().includes(search.toLowerCase());
-    
+
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -39,26 +39,30 @@ export function OrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">Orders</h2>
-          <p className="text-gray-500">Manage and track customer orders.</p>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Orders</h2>
+          <p className="text-sm md:text-base text-gray-500">Manage and track customer orders.</p>
         </div>
       </div>
 
-      <Card>
-        <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row gap-4">
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-gray-200 flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-            <Input 
-              placeholder="Search by Order ID, Customer or Email..." 
-              className="pl-9"
+            <Input
+              placeholder="Search by ID, Customer or Email..."
+              className="pl-9 w-full focus:ring-[#e7b008] focus:border-[#e7b008]"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="w-full sm:w-48">
-            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <div className="w-full md:w-48">
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="focus:ring-[#e7b008] focus:border-[#e7b008]"
+            >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
@@ -131,7 +135,7 @@ function StatusBadge({ status }: { status: string }) {
     pending: "warning",
     cancelled: "danger",
   };
-  
+
   const labels: Record<string, string> = {
     shipped: "Shipped",
     delivered: "Delivered",

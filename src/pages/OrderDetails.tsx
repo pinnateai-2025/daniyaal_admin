@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Select } from '../components/ui/Select';
-import { formatCurrency, formatDate } from '../lib/utils';
+import { formatCurrency, formatDate, cn } from '../lib/utils';
 import { ArrowLeft, Truck, MapPin, User, CreditCard, Printer } from 'lucide-react';
 
 export function OrderDetailsPage() {
@@ -43,39 +43,39 @@ export function OrderDetailsPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-10">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/orders')}>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/orders')} className="shrink-0">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Order #{order.id}</h2>
-            <p className="text-gray-500 text-sm">
+          <div className="min-w-0">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 truncate">Order #{order.id}</h2>
+            <p className="text-gray-500 text-xs md:text-sm">
               Placed on {formatDate(order.date)}
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
-           <Button variant="outline" onClick={() => window.print()}>
-             <Printer className="mr-2 h-4 w-4" /> Print Invoice
-           </Button>
-           <div className="w-40">
-             <Select 
-               value={order.status} 
-               onChange={(e) => handleStatusChange(e.target.value)}
-               disabled={updating}
-               className={
-                 order.status === 'delivered' ? 'border-green-200 bg-green-50 text-green-700' : 
-                 order.status === 'cancelled' ? 'border-red-200 bg-red-50 text-red-700' : ''
-               }
-             >
-               <option value="pending">Pending</option>
-               <option value="processing">Processing</option>
-               <option value="shipped">Shipped</option>
-               <option value="delivered">Delivered</option>
-               <option value="cancelled">Cancelled</option>
-             </Select>
-           </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button variant="outline" onClick={() => window.print()} className="w-full sm:w-auto order-2 sm:order-1">
+            <Printer className="mr-2 h-4 w-4" /> Print Invoice
+          </Button>
+          <div className="w-full sm:w-48 order-1 sm:order-2">
+            <Select
+              value={order.status}
+              onChange={(e) => handleStatusChange(e.target.value)}
+              disabled={updating}
+              className={
+                order.status === 'delivered' ? 'border-green-200 bg-green-50 text-green-700' :
+                  order.status === 'cancelled' ? 'border-red-200 bg-red-50 text-red-700' : ''
+              }
+            >
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -89,20 +89,22 @@ export function OrderDetailsPage() {
             <CardContent className="p-0">
               <div className="divide-y divide-gray-100">
                 {order.items.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-6">
-                    <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+                  <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 md:p-6 transition-colors hover:bg-gray-50/50">
+                    <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-gray-50 mx-auto sm:mx-0">
                       <img src={item.image} alt={item.productName} className="h-full w-full object-cover" />
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{item.productName}</h4>
-                      <p className="text-sm text-gray-500">Product ID: {item.productId}</p>
+                    <div className="flex-1 text-center sm:text-left">
+                      <h4 className="font-medium text-gray-900 line-clamp-1">{item.productName}</h4>
+                      <p className="text-xs text-gray-500">ID: {item.productId.substring(0, 8)}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium text-gray-900">{formatCurrency(item.price)}</p>
-                      <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                    </div>
-                    <div className="text-right font-bold text-gray-900 w-24">
-                      {formatCurrency(item.price * item.quantity)}
+                    <div className="flex sm:flex-col justify-between items-center sm:items-end w-full sm:w-auto gap-2">
+                      <div className="text-left sm:text-right">
+                        <p className="font-medium text-gray-900">{formatCurrency(item.price)}</p>
+                        <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                      </div>
+                      <div className="text-right font-bold text-gray-900 sm:w-24 border-l sm:border-l-0 pl-4 sm:pl-0">
+                        {formatCurrency(item.price * item.quantity)}
+                      </div>
                     </div>
                   </div>
                 ))}

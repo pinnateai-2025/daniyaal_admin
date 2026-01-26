@@ -44,11 +44,11 @@ export function Sidebar({ className, onClose }: SidebarProps) {
       )}
     >
       {/* LOGO */}
-      <div className="flex h-20 items-center justify-center border-b border-gray-200 px-6">
+      <div className="flex h-16 md:h-20 items-center justify-center border-b border-gray-200 px-4 md:px-6">
         <img
           src={logo}
           alt="Daniyaal Perfumery"
-          className="h-12 w-auto object-contain"
+          className="h-8 md:h-12 w-auto object-contain"
         />
       </div>
 

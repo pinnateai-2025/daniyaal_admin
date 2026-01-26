@@ -62,17 +62,17 @@ export function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
           Dashboard
         </h2>
-        <p className="text-gray-500">
+        <p className="text-sm md:text-base text-gray-500">
           Overview of your store's performance
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Revenue"
           value={formatCurrency(stats.totalSales ?? 0)}
@@ -98,18 +98,18 @@ export function Dashboard() {
 
       {/* Chart */}
       <Card>
-        <CardHeader>
-          <CardTitle>Sales Overview (Last 7 Days)</CardTitle>
+        <CardHeader className="p-4 md:p-6">
+          <CardTitle className="text-base md:text-lg">Sales Overview (Last 7 Days)</CardTitle>
         </CardHeader>
-        <CardContent className="pl-2">
-          <div className="h-[300px]">
+        <CardContent className="px-2 pb-4 md:p-6">
+          <div className="h-[250px] md:h-[300px]">
             {salesData.length === 0 ? (
               <div className="flex h-full items-center justify-center text-gray-400">
                 No sales data available
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={salesData}>
+                <AreaChart data={salesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="salesColor" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#e7b008" stopOpacity={0.3} />
@@ -117,10 +117,22 @@ export function Dashboard() {
                     </linearGradient>
                   </defs>
 
-                  <XAxis dataKey="date" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <Tooltip />
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fontSize: 10 }}
+                    minTickGap={20}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fontSize: 10 }}
+                  />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <Tooltip
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
 
                   <Area
                     type="monotone"
@@ -139,22 +151,22 @@ export function Dashboard() {
       {/* Top Product */}
       {stats.topProduct && (
         <Card>
-          <CardHeader>
-            <CardTitle>Top Product</CardTitle>
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-base md:text-lg">Top Product</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center text-center gap-4">
+          <CardContent className="flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 p-4 md:p-6">
             <img
               src={stats.topProduct.image}
               alt={stats.topProduct.name}
-              className="h-32 w-32 rounded-lg object-cover"
+              className="h-24 w-24 md:h-32 md:w-32 rounded-lg object-cover shadow-sm"
             />
-            <div>
-              <h4 className="font-semibold">{stats.topProduct.name}</h4>
+            <div className="flex-1 space-y-1">
+              <h4 className="font-semibold text-gray-900">{stats.topProduct.name}</h4>
               <p className="text-sm text-gray-500">
                 {stats.topProduct.sold} units sold
               </p>
+              <Badge variant="success" className="mt-2">Best Seller</Badge>
             </div>
-            <Badge variant="success">Best Seller</Badge>
           </CardContent>
         </Card>
       )}
@@ -172,13 +184,13 @@ function StatCard({
 }: any) {
   return (
     <Card>
-      <CardHeader className="flex items-center justify-between pb-2">
-        <CardTitle className="text-sm text-gray-500">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-gray-500" />
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4 md:p-6">
+        <CardTitle className="text-xs md:text-sm font-medium text-gray-500">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-gray-400" />
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        <p className={`text-xs mt-1 ${trendColor} flex items-center`}>
+      <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+        <div className="text-xl md:text-2xl font-bold">{value}</div>
+        <p className={`text-[10px] md:text-xs mt-1 ${trendColor} flex items-center`}>
           <TrendingUp className="h-3 w-3 mr-1" />
           Updated
         </p>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
   LineChart,
   Line,
   Legend
@@ -27,51 +27,51 @@ export function SalesPage() {
   const totalRefunds = data.reduce((acc, curr) => acc + (curr.refunds || 0), 0);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900">Sales Analytics</h2>
-        <p className="text-gray-500">Detailed breakdown of revenue and trends.</p>
+    <div className="space-y-6 md:space-y-8 pb-10">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Sales Analytics</h2>
+        <p className="text-sm md:text-base text-gray-500">Detailed breakdown of revenue and trends.</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="bg-indigo-50 border-indigo-100">
-          <CardHeader>
-            <CardTitle className="text-indigo-900">Total Revenue (30 Days)</CardTitle>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card className="bg-indigo-50/50 border-indigo-100 shadow-sm">
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-xs md:text-sm font-medium text-indigo-900 uppercase tracking-wider">Total Revenue (30 Days)</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-indigo-700">{formatCurrency(totalRevenue)}</div>
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <div className="text-2xl md:text-3xl font-bold text-indigo-700">{formatCurrency(totalRevenue)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-red-50 border-red-100">
-          <CardHeader>
-            <CardTitle className="text-red-900">Total Refunds</CardTitle>
+        <Card className="bg-rose-50/50 border-rose-100 shadow-sm">
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-xs md:text-sm font-medium text-rose-900 uppercase tracking-wider">Total Refunds</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-red-700">{formatCurrency(totalRefunds)}</div>
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <div className="text-2xl md:text-3xl font-bold text-rose-700">{formatCurrency(totalRefunds)}</div>
           </CardContent>
         </Card>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Revenue vs Sales Trend</CardTitle>
+        <CardHeader className="p-4 md:p-6">
+          <CardTitle className="text-base md:text-lg">Revenue vs Sales Trend</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="h-[400px]">
+        <CardContent className="p-2 md:p-6">
+          <div className="h-[300px] md:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis 
-                  dataKey="date" 
-                  stroke="#888888" 
-                  fontSize={12} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="date"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
                   axisLine={false}
-                  tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, {day: 'numeric', month: 'short'})}
+                  tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                 />
                 <YAxis yAxisId="left" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `$${val}`} />
                 <YAxis yAxisId="right" orientation="right" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
                 <Legend />
@@ -84,17 +84,17 @@ export function SalesPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Daily Revenue Bar Chart</CardTitle>
+        <CardHeader className="p-4 md:p-6">
+          <CardTitle className="text-base md:text-lg">Daily Revenue Bar Chart</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="h-[300px]">
+        <CardContent className="p-2 md:p-6">
+          <div className="h-[250px] md:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                 <XAxis dataKey="date" hide />
                 <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip cursor={{fill: '#f9fafb'}} />
+                <Tooltip cursor={{ fill: '#f9fafb' }} />
                 <Bar dataKey="revenue" fill="#6366f1" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

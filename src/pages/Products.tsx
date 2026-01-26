@@ -70,32 +70,32 @@ export function ProductsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">Products</h2>
-          <p className="text-gray-500">Manage your product catalog and inventory.</p>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Products</h2>
+          <p className="text-sm md:text-base text-gray-500">Manage your product catalog and inventory.</p>
         </div>
 
-        <div className="flex gap-3">
-          <div className="relative hidden sm:block">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search..."
-              className="pl-9 pr-4 py-2 border border-gray-200 rounded-md text-sm w-64 
-              focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Search products..."
+              className="pl-9 pr-4 py-2 border border-gray-200 rounded-md text-sm w-full sm:w-64 
+              focus:outline-none focus:ring-2 focus:ring-[#e7b008] focus:border-transparent transition-all"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          <Button onClick={() => navigate("/products/new")}>
+          <Button onClick={() => navigate("/products/new")} className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" /> Add Product
           </Button>
         </div>
       </div>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
@@ -187,11 +187,10 @@ export function ProductsPage() {
 
                         <td className="px-6 py-4">
                           <span
-                            className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                              product.stock < 10
-                                ? "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10"
-                                : "bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/10"
-                            }`}
+                            className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${product.stock < 10
+                              ? "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10"
+                              : "bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/10"
+                              }`}
                           >
                             {product.stock} in stock
                           </span>
@@ -200,11 +199,12 @@ export function ProductsPage() {
                         <td className="px-6 py-4 text-gray-600">{product.totalSold}</td>
 
                         <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
                             <Button
                               variant="ghost"
                               size="icon"
                               onClick={() => navigate(`/products/${product.id}`)}
+                              className="h-8 w-8"
                             >
                               <Edit className="h-4 w-4 text-gray-500" />
                             </Button>
@@ -212,10 +212,10 @@ export function ProductsPage() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="hover:bg-red-50"
+                              className="h-8 w-8 hover:bg-red-50 text-red-600"
                               onClick={() => handleDelete(product.id)}
                             >
-                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </td>

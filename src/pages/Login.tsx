@@ -5,7 +5,7 @@ import { Mail, Lock } from "lucide-react";
 
 export function Login() {
   const [email, setEmail] = useState("daniyaalperfumery@gmail.com");
-  const [password, setPassword] = useState("password");
+  const [password, setPassword] = useState("AmanKhan*1");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,15 +21,15 @@ export function Login() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError("Invalid credentials. Try daniyaalperfumery@gmail.com");
+      setError("Invalid credentials. Please check your email and password.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg border border-gray-100">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="w-full max-w-md space-y-6 rounded-xl bg-white p-6 md:p-10 shadow-xl border border-gray-100 transition-all">
 
         {/* Logo */}
         <div className="text-center flex flex-col items-center">

@@ -17,7 +17,7 @@ export function ProductForm() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
-  
+
   // Form State
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -73,7 +73,7 @@ export function ProductForm() {
     setSubmitting(true);
 
     const finalCategory = isNewCategory ? newCategory : category;
-    
+
     // Validation: MRP should be greater than Price if provided
     if (mrp && parseFloat(mrp) < parseFloat(price)) {
       alert("MRP cannot be less than the selling price.");
@@ -150,22 +150,22 @@ export function ProductForm() {
                       <p className="mt-2 text-xs text-gray-500">Click to upload or drag and drop</p>
                     </div>
                   )}
-                  <input 
-                    type="file" 
+                  <input
+                    type="file"
                     accept="image/*"
                     className="absolute inset-0 opacity-0 cursor-pointer"
                     onChange={handleImageUpload}
                   />
                 </div>
-                
+
                 <div className="text-center">
                   <span className="text-xs text-gray-500">OR</span>
                 </div>
 
-                <Input 
-                  placeholder="Paste Image URL" 
-                  value={image} 
-                  onChange={(e) => setImage(e.target.value)} 
+                <Input
+                  placeholder="Paste Image URL"
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
                 />
               </div>
             </CardContent>
@@ -176,23 +176,23 @@ export function ProductForm() {
               <CardTitle className="text-base">Status</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-               <div className="space-y-2">
-                 <Label>Stock Availability</Label>
-                 <Input 
-                    type="number" 
-                    placeholder="0" 
-                    value={stock}
-                    onChange={(e) => setStock(e.target.value)}
-                    required
-                 />
-                 <p className="text-xs text-gray-500">
-                   {parseInt(stock) > 0 ? (
-                     <span className="text-green-600 font-medium">In Stock</span>
-                   ) : (
-                     <span className="text-red-600 font-medium">Out of Stock</span>
-                   )}
-                 </p>
-               </div>
+              <div className="space-y-2">
+                <Label>Stock Availability</Label>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  required
+                />
+                <p className="text-xs text-gray-500">
+                  {parseInt(stock) > 0 ? (
+                    <span className="text-green-600 font-medium">In Stock</span>
+                  ) : (
+                    <span className="text-red-600 font-medium">Out of Stock</span>
+                  )}
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -206,9 +206,9 @@ export function ProductForm() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Product Name</Label>
-                <Input 
-                  id="name" 
-                  placeholder="e.g. Modern Coffee Table" 
+                <Input
+                  id="name"
+                  placeholder="e.g. Modern Coffee Table"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -217,9 +217,9 @@ export function ProductForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
-                <Textarea 
-                  id="description" 
-                  placeholder="Describe your product..." 
+                <Textarea
+                  id="description"
+                  placeholder="Describe your product..."
                   className="min-h-[120px]"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -233,16 +233,16 @@ export function ProductForm() {
               <CardTitle className="text-base">Pricing & Category</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="price">Selling Price (INR)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-gray-500">₹</span>
-                    <Input 
-                      id="price" 
-                      type="number" 
-                      className="pl-7" 
-                      placeholder="0.00" 
+                    <span className="absolute left-3 top-2.5 text-gray-500 text-sm">₹</span>
+                    <Input
+                      id="price"
+                      type="number"
+                      className="pl-7"
+                      placeholder="0.00"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       required
@@ -253,26 +253,26 @@ export function ProductForm() {
                 <div className="space-y-2">
                   <Label htmlFor="mrp">MRP (Fake Price)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-gray-500">₹</span>
-                    <Input 
-                      id="mrp" 
-                      type="number" 
-                      className="pl-7" 
-                      placeholder="0.00" 
+                    <span className="absolute left-3 top-2.5 text-gray-500 text-sm">₹</span>
+                    <Input
+                      id="mrp"
+                      type="number"
+                      className="pl-7"
+                      placeholder="0.00"
                       value={mrp}
                       onChange={(e) => setMrp(e.target.value)}
                     />
                   </div>
-                  <p className="text-xs text-gray-500">Shows as crossed out price.</p>
+                  <p className="text-[10px] text-gray-500">Shows as crossed out price.</p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
                 {!isNewCategory ? (
-                  <Select 
-                    id="category" 
-                    value={category} 
+                  <Select
+                    id="category"
+                    value={category}
                     onChange={(e) => {
                       if (e.target.value === 'new_custom_category') {
                         setIsNewCategory(true);
@@ -291,8 +291,8 @@ export function ProductForm() {
                   </Select>
                 ) : (
                   <div className="flex gap-2">
-                    <Input 
-                      placeholder="Enter new category name" 
+                    <Input
+                      placeholder="Enter new category name"
                       value={newCategory}
                       onChange={(e) => setNewCategory(e.target.value)}
                       autoFocus
@@ -308,12 +308,12 @@ export function ProductForm() {
           </Card>
 
           <div className="flex justify-end gap-4">
-             <Button type="button" variant="outline" onClick={() => navigate('/products')}>
-               Cancel
-             </Button>
-             <Button type="submit" isLoading={submitting}>
-               {isEditMode ? 'Save Changes' : 'Create Product'}
-             </Button>
+            <Button type="button" variant="outline" onClick={() => navigate('/products')}>
+              Cancel
+            </Button>
+            <Button type="submit" isLoading={submitting}>
+              {isEditMode ? 'Save Changes' : 'Create Product'}
+            </Button>
           </div>
         </div>
       </form>

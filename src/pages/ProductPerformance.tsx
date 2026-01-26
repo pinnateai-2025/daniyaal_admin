@@ -28,7 +28,7 @@ export function ProductPerformancePage() {
       direction = 'asc';
     }
     setSortConfig({ key, direction });
-    
+
     const sorted = [...products].sort((a, b) => {
       // Handle undefined values safely if any
       const valA = a[key] ?? 0;
@@ -46,7 +46,7 @@ export function ProductPerformancePage() {
   // Top 3 Products for Cards
   const topByRevenue = [...products].sort((a, b) => b.totalRevenue - a.totalRevenue)[0];
   const topByVolume = [...products].sort((a, b) => b.totalSold - a.totalSold)[0];
-  
+
   // Chart Data (Top 5)
   const chartData = products
     .sort((a, b) => b.totalRevenue - a.totalRevenue)
@@ -61,56 +61,60 @@ export function ProductPerformancePage() {
   const maxRevenue = Math.max(...products.map(p => p.totalRevenue));
 
   return (
-    <div className="space-y-8 pb-10">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900">Product Performance</h2>
-        <p className="text-gray-500">Analyze sales volume, revenue, and inventory efficiency.</p>
+    <div className="space-y-6 md:space-y-8 pb-10">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Product Performance</h2>
+        <p className="text-sm md:text-base text-gray-500">Analyze sales volume, revenue, and inventory efficiency.</p>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-100">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-emerald-900">Top Earner</CardTitle>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-100 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 md:p-6">
+            <CardTitle className="text-xs md:text-sm font-medium text-emerald-900">Top Earner</CardTitle>
             <DollarSign className="h-4 w-4 text-emerald-600" />
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <img src={topByRevenue?.image} alt="" className="h-12 w-12 rounded-md object-cover border border-emerald-200" />
-              <div>
-                <div className="text-lg font-bold text-gray-900">{formatCurrency(topByRevenue?.totalRevenue || 0)}</div>
-                <p className="text-xs text-gray-500 truncate w-32">{topByRevenue?.name}</p>
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <div className="flex items-center gap-3 md:gap-4">
+              <img src={topByRevenue?.image} alt="" className="h-10 w-10 md:h-12 md:w-12 rounded-md object-cover border border-emerald-200" />
+              <div className="min-w-0">
+                <div className="text-base md:text-lg font-bold text-gray-900 truncate">
+                  {formatCurrency(topByRevenue?.totalRevenue || 0)}
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-500 truncate max-w-[120px]">{topByRevenue?.name}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-blue-900">Best Seller (Volume)</CardTitle>
+        <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 md:p-6">
+            <CardTitle className="text-xs md:text-sm font-medium text-blue-900">Best Seller</CardTitle>
             <TrendingUp className="h-4 w-4 text-blue-600" />
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <img src={topByVolume?.image} alt="" className="h-12 w-12 rounded-md object-cover border border-blue-200" />
-              <div>
-                <div className="text-lg font-bold text-gray-900">{topByVolume?.totalSold} units</div>
-                <p className="text-xs text-gray-500 truncate w-32">{topByVolume?.name}</p>
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <div className="flex items-center gap-3 md:gap-4">
+              <img src={topByVolume?.image} alt="" className="h-10 w-10 md:h-12 md:w-12 rounded-md object-cover border border-blue-200" />
+              <div className="min-w-0">
+                <div className="text-base md:text-lg font-bold text-gray-900">
+                  {topByVolume?.totalSold} <span className="text-xs font-normal text-gray-500">units</span>
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-500 truncate max-w-[120px]">{topByVolume?.name}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Total Inventory Value</CardTitle>
-            <Package className="h-4 w-4 text-gray-500" />
+        <Card className="sm:col-span-2 lg:col-span-1 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 md:p-6">
+            <CardTitle className="text-xs md:text-sm font-medium text-gray-500">Inventory Value</CardTitle>
+            <Package className="h-4 w-4 text-gray-400" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <div className="text-xl md:text-2xl font-bold text-gray-900 truncate">
               {formatCurrency(products.reduce((acc, p) => acc + (p.price * p.stock), 0))}
             </div>
-            <p className="text-xs text-gray-500">Based on current stock & selling price</p>
+            <p className="text-[10px] md:text-xs text-gray-500 mt-1">Net stock valuation</p>
           </CardContent>
         </Card>
       </div>
@@ -126,8 +130,18 @@ export function ProductPerformancePage() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} layout="vertical" margin={{ left: 0 }}>
                   <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" width={100} tick={{fontSize: 11}} interval={0} />
-                  <Tooltip formatter={(value) => formatCurrency(value as number)} cursor={{fill: 'transparent'}} />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    width={80}
+                    tick={{ fontSize: 9 }}
+                    interval={0}
+                  />
+                  <Tooltip
+                    formatter={(value) => formatCurrency(value as number)}
+                    cursor={{ fill: 'transparent' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
                   <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === 0 ? '#059669' : '#10b981'} fillOpacity={1 - (index * 0.15)} />
@@ -170,9 +184,8 @@ export function ProductPerformancePage() {
                           <div className="relative">
                             <img src={product.image} alt="" className="h-10 w-10 rounded-md object-cover border border-gray-200" />
                             {index < 3 && sortConfig.key === 'totalRevenue' && sortConfig.direction === 'desc' && (
-                              <div className={`absolute -top-2 -right-2 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm ${
-                                index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : 'bg-orange-400'
-                              }`}>
+                              <div className={`absolute -top-2 -right-2 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : 'bg-orange-400'
+                                }`}>
                                 <Trophy className="h-3 w-3" />
                               </div>
                             )}
@@ -189,9 +202,9 @@ export function ProductPerformancePage() {
                       <td className="px-6 py-4 w-32">
                         <div className="flex flex-col gap-1">
                           <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-emerald-500 rounded-full" 
-                              style={{ width: `${(product.totalRevenue / maxRevenue) * 100}%` }} 
+                            <div
+                              className="h-full bg-emerald-500 rounded-full"
+                              style={{ width: `${(product.totalRevenue / maxRevenue) * 100}%` }}
                             />
                           </div>
                           <span className="text-[10px] text-gray-400 text-right">
