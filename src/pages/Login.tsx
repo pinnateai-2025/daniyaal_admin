@@ -12,12 +12,8 @@ import {
 
 export function Login() {
   const [email, setEmail] = useState("daniyaalperfumery@gmail.com");
-<<<<<<< HEAD
   const [password, setPassword] = useState("AmanKhan*1");
-=======
-  const [password, setPassword] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
->>>>>>> e8c0c3c4baeedd735da385d50185004179d0ffae
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,13 +33,8 @@ export function Login() {
     try {
       await login(email, password);
       navigate("/");
-<<<<<<< HEAD
     } catch (err) {
       setError("Invalid credentials. Please check your email and password.");
-=======
-    } catch {
-      setError("Invalid credentials. Please try again.");
->>>>>>> e8c0c3c4baeedd735da385d50185004179d0ffae
     } finally {
       setIsSubmitting(false);
     }
@@ -62,110 +53,91 @@ export function Login() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
       <div className="w-full max-w-md space-y-6 rounded-xl bg-white p-6 md:p-10 shadow-xl border border-gray-100 transition-all">
-=======
-    <>
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-md rounded-xl bg-white p-10 shadow-lg border border-gray-100 space-y-8">
->>>>>>> e8c0c3c4baeedd735da385d50185004179d0ffae
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900">Admin Access</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Sign in to manage your store
+          </p>
+        </div>
 
-          {/* Header */}
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900">Admin Access</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Sign in to manage your store
-            </p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email address
+            </label>
+            <div className="relative mt-1">
+              <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="block w-full rounded-md border border-gray-300 pl-10 py-2
+                  focus:border-[#e7b008] focus:ring-[#e7b008] sm:text-sm"
+              />
+            </div>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="relative mt-1">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 pl-10 py-2
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <div className="relative mt-1">
+              <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block w-full rounded-md border border-gray-300 pl-10 pr-10 py-2
                   focus:border-[#e7b008] focus:ring-[#e7b008] sm:text-sm"
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="relative mt-1">
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 pl-10 pr-10 py-2
-                  focus:border-[#e7b008] focus:ring-[#e7b008] sm:text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((p) => !p)}
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Forgot password */}
-            <div className="text-right">
+              />
               <button
                 type="button"
-                onClick={() => {
-                  setShowForgotModal(true);
-                  setResetEmail(email);
-                  setResetInfo("");
-                }}
-                className="text-sm text-[#e7b008] hover:underline"
+                onClick={() => setShowPassword((p) => !p)}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
               >
-                Forgot password?
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+          </div>
 
-            {/* Error */}
-            {error && (
-              <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                {error}
-              </div>
-            )}
-
-            {/* Submit */}
+          <div className="text-right">
             <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full rounded-md py-2 font-medium text-white
-              bg-[#e7b008] hover:bg-[#d6a707] transition disabled:opacity-70"
+              type="button"
+              onClick={() => {
+                setShowForgotModal(true);
+                setResetEmail(email);
+                setResetInfo("");
+              }}
+              className="text-sm text-[#e7b008] hover:underline"
             >
-              {isSubmitting ? "Signing in..." : "Sign in"}
+              Forgot password?
             </button>
-          </form>
-        </div>
+          </div>
+
+          {error && (
+            <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-md py-2 font-medium text-white
+              bg-[#e7b008] hover:bg-[#d6a707] transition disabled:opacity-70"
+          >
+            {isSubmitting ? "Signing in..." : "Sign in"}
+          </button>
+        </form>
       </div>
 
-      {/* ================= FORGOT PASSWORD MODAL ================= */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-
-            {/* Modal Header */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
                 Reset Password
@@ -178,7 +150,6 @@ export function Login() {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="space-y-4">
               <p className="text-sm text-gray-600">
                 Enter your admin email address to reset your password.
@@ -205,7 +176,6 @@ export function Login() {
               )}
             </div>
 
-            {/* Modal Actions */}
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => setShowForgotModal(false)}
@@ -223,6 +193,6 @@ export function Login() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
