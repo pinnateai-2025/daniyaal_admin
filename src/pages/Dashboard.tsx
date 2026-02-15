@@ -18,7 +18,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import { Badge } from "../components/ui/Badge";
-import { mockApi } from "../api/mock";
+import { adminService } from "../api/adminService";
 import { DashboardStats, SalesData } from "../types";
 import { formatCurrency } from "../lib/utils";
 
@@ -31,14 +31,14 @@ export function Dashboard() {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const dashboard = await mockApi.getDashboardStats();
-        const trends = await mockApi.getSalesTrends();
+        const dashboard = await adminService.getDashboardStats();
+        const trends = await adminService.getSalesTrends(7); // Last 7 days as per UI
 
         setStats(dashboard);
         setSalesData(trends ?? []);
       } catch (err) {
         console.error("Dashboard API error:", err);
-        setError("Failed to load dashboard");
+        setError("Failed to load dashboard from server");
       } finally {
         setLoading(false);
       }

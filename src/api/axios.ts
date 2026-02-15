@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://daniyaalbackend-env.eba-ip8muxxp.us-east-1.elasticbeanstalk.com/",
+  baseURL: "https://api.daniyaalperfumery.in/api",
   headers: {
     "Content-Type": "application/json",
   },

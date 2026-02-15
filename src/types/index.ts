@@ -2,10 +2,22 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'customer' | 'support';
+  role: 'admin' | 'customer' | 'support' | 'user';
+  status: 'active' | 'inactive' | 'suspended';
   isVerified: boolean;
   createdAt: string;
   avatar?: string;
+}
+
+export interface ProductPerformance {
+  productId: string;
+  name: string;
+  image: string;
+  category: string;
+  totalSold: number;
+  revenue: number;
+  stock: number;
+  price: number;
 }
 
 export interface Product {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+
 import {
   Mail,
   Lock,
@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 export function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@gmail.com");
+  const [password, setPassword] = useState("Admin@1234");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +22,7 @@ export function Login() {
   const [resetEmail, setResetEmail] = useState("");
   const [resetInfo, setResetInfo] = useState("");
 
-  const { login } = useAuth();
+  // No connection to authContext as requested for this admin login
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,12 +30,12 @@ export function Login() {
     setError("");
     setIsSubmitting(true);
 
-    try {
-      await login(email, password);
-      navigate("/");
-    } catch (err) {
+    // Raw ID and Password check
+    if (email === "admin@gmail.com" && password === "Admin@1234") {
+      localStorage.setItem("token", "mock-admin-token");
+      window.location.href = "/"; // Direct redirect to open dashboard
+    } else {
       setError("Invalid credentials. Please check your email and password.");
-    } finally {
       setIsSubmitting(false);
     }
   };

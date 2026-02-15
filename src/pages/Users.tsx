@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { mockApi } from '../api/mock';
+import { adminService } from '../api/adminService';
 import { User } from '../types';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
@@ -10,17 +10,56 @@ import { formatDate } from '../lib/utils';
 export function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const fetchUsers = async (p: number) => {
+    setLoading(true);
+    try {
+      const res = await adminService.getUsers(p, 20);
+      // Assuming the response structure might be { users: User[], total: number } or just User[]
+      // The adminService I wrote expects { users: User[]; total: number; pages: number }
+      setUsers(res.users);
+      setTotal(res.total);
+    } catch (err) {
+      console.error("Failed to fetch users", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    mockApi.getUsers().then((res) => {
-      setUsers(res.data);
-      setLoading(false);
-    });
-  }, []);
+    fetchUsers(page);
+  }, [page]);
 
-  const handleDelete = (id: string) => {
+  const handleUpdateStatus = async (user: User) => {
+    const newStatus = user.status === 'active' ? 'inactive' : 'active';
+    try {
+      await adminService.updateUser(user.id, { status: newStatus as any });
+      setUsers(users.map(u => u.id === user.id ? { ...u, status: newStatus as any } : u));
+    } catch (err) {
+      alert("Failed to update status");
+    }
+  };
+
+  const handleUpdateRole = async (user: User) => {
+    const newRole = user.role === 'admin' ? 'user' : 'admin';
+    try {
+      await adminService.updateUser(user.id, { role: newRole as any });
+      setUsers(users.map(u => u.id === user.id ? { ...u, role: newRole as any } : u));
+    } catch (err) {
+      alert("Failed to update role");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this user?')) {
-      setUsers(users.filter(u => u.id !== id));
+      try {
+        await adminService.deleteUser(id);
+        setUsers(users.filter(u => u.id !== id));
+      } catch (err) {
+        alert("Failed to delete user");
+      }
     }
   };
 
@@ -50,12 +89,12 @@ export function UsersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {users.length > 0 ? (
+                {users && users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <img src={user.avatar} alt="" className="h-10 w-10 rounded-full bg-gray-200" />
+                          <img src={user.avatar || 'https://ui-avatars.com/api/?name=' + user.name} alt="" className="h-10 w-10 rounded-full bg-gray-200" />
                           <div>
                             <div className="font-medium text-gray-900">{user.name}</div>
                             <div className="text-gray-500">{user.email}</div>
@@ -63,28 +102,26 @@ export function UsersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge variant={user.role === 'admin' ? 'default' : 'neutral'} className="capitalize">
-                          {user.role}
-                        </Badge>
+                        <button onClick={() => handleUpdateRole(user)}>
+                          <Badge variant={user.role === 'admin' ? 'default' : 'neutral'} className="capitalize cursor-pointer hover:opacity-80">
+                            {user.role}
+                          </Badge>
+                        </button>
                       </td>
                       <td className="px-6 py-4">
-                        {user.isVerified ? (
-                          <div className="flex items-center text-green-600 gap-1.5">
-                            <CheckCircle className="h-4 w-4" /> Verified
-                          </div>
-                        ) : (
-                          <div className="flex items-center text-gray-400 gap-1.5">
-                            <XCircle className="h-4 w-4" /> Unverified
-                          </div>
-                        )}
+                        <button onClick={() => handleUpdateStatus(user)}>
+                          <Badge variant={user.status === 'active' ? 'success' : 'warning'} className="capitalize cursor-pointer hover:opacity-80">
+                            {user.status || (user.isVerified ? 'active' : 'inactive')}
+                          </Badge>
+                        </button>
                       </td>
                       <td className="px-6 py-4 text-gray-500">{formatDate(user.createdAt)}</td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" onClick={() => handleUpdateRole(user)} title="Toggle Role">
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(user.id)}>
+                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(user.id)} title="Delete User">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -101,6 +138,31 @@ export function UsersPage() {
               </tbody>
             </table>
           </div>
+          {total > 20 && (
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
+              <div className="text-sm text-gray-500">
+                Showing {users.length} of {total} users
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(page - 1)}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(page + 1)}
+                  disabled={users.length < 20}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

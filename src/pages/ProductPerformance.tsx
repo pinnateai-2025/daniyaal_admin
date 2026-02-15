@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { mockApi } from '../api/mock';
-import { Product } from '../types';
+import { adminService } from '../api/adminService';
+import { ProductPerformance } from '../types';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { formatCurrency } from '../lib/utils';
@@ -8,21 +8,26 @@ import { ArrowUpDown, TrendingUp, DollarSign, Package, Trophy } from 'lucide-rea
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 export function ProductPerformancePage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductPerformance[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Product; direction: 'asc' | 'desc' }>({ key: 'totalRevenue', direction: 'desc' });
+  const [sortConfig, setSortConfig] = useState<{ key: keyof ProductPerformance; direction: 'asc' | 'desc' }>({ key: 'revenue', direction: 'desc' });
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await mockApi.getProducts();
-      // Initial sort by revenue
-      setProducts(data.sort((a, b) => b.totalRevenue - a.totalRevenue));
-      setLoading(false);
+      try {
+        const data = await adminService.getProductPerformance(20);
+        // Initial sort by revenue
+        setProducts(data.sort((a, b) => b.revenue - a.revenue));
+      } catch (err) {
+        console.error("Failed to fetch product performance", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
 
-  const handleSort = (key: keyof Product) => {
+  const handleSort = (key: keyof ProductPerformance) => {
     let direction: 'asc' | 'desc' = 'desc';
     if (sortConfig.key === key && sortConfig.direction === 'desc') {
       direction = 'asc';
@@ -30,7 +35,6 @@ export function ProductPerformancePage() {
     setSortConfig({ key, direction });
 
     const sorted = [...products].sort((a, b) => {
-      // Handle undefined values safely if any
       const valA = a[key] ?? 0;
       const valB = b[key] ?? 0;
 
@@ -44,21 +48,21 @@ export function ProductPerformancePage() {
   if (loading) return <div className="p-8">Loading performance data...</div>;
 
   // Top 3 Products for Cards
-  const topByRevenue = [...products].sort((a, b) => b.totalRevenue - a.totalRevenue)[0];
+  const topByRevenue = [...products].sort((a, b) => b.revenue - a.revenue)[0];
   const topByVolume = [...products].sort((a, b) => b.totalSold - a.totalSold)[0];
 
   // Chart Data (Top 5)
   const chartData = products
-    .sort((a, b) => b.totalRevenue - a.totalRevenue)
+    .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 5)
     .map(p => ({
       name: p.name.length > 15 ? p.name.substring(0, 15) + '...' : p.name,
-      revenue: p.totalRevenue,
+      revenue: p.revenue,
       sales: p.totalSold
     }));
 
   // Max value for progress bars
-  const maxRevenue = Math.max(...products.map(p => p.totalRevenue));
+  const maxRevenue = Math.max(...products.map(p => p.revenue), 1);
 
   return (
     <div className="space-y-6 md:space-y-8 pb-10">
@@ -79,7 +83,7 @@ export function ProductPerformancePage() {
               <img src={topByRevenue?.image} alt="" className="h-10 w-10 md:h-12 md:w-12 rounded-md object-cover border border-emerald-200" />
               <div className="min-w-0">
                 <div className="text-base md:text-lg font-bold text-gray-900 truncate">
-                  {formatCurrency(topByRevenue?.totalRevenue || 0)}
+                  {formatCurrency(topByRevenue?.revenue || 0)}
                 </div>
                 <p className="text-[10px] md:text-xs text-gray-500 truncate max-w-[120px]">{topByRevenue?.name}</p>
               </div>
@@ -143,7 +147,7 @@ export function ProductPerformancePage() {
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   />
                   <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
-                    {chartData.map((entry, index) => (
+                    {chartData.map((_entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === 0 ? '#059669' : '#10b981'} fillOpacity={1 - (index * 0.15)} />
                     ))}
                   </Bar>
@@ -170,7 +174,7 @@ export function ProductPerformancePage() {
                     <th className="px-6 py-4 cursor-pointer hover:bg-gray-100" onClick={() => handleSort('totalSold')}>
                       <div className="flex items-center gap-1">Sold <ArrowUpDown className="h-3 w-3" /></div>
                     </th>
-                    <th className="px-6 py-4 cursor-pointer hover:bg-gray-100" onClick={() => handleSort('totalRevenue')}>
+                    <th className="px-6 py-4 cursor-pointer hover:bg-gray-100" onClick={() => handleSort('revenue')}>
                       <div className="flex items-center gap-1">Revenue <ArrowUpDown className="h-3 w-3" /></div>
                     </th>
                     <th className="px-6 py-4">Performance</th>
@@ -178,12 +182,12 @@ export function ProductPerformancePage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {products.map((product, index) => (
-                    <tr key={product.id} className="hover:bg-gray-50">
+                    <tr key={product.productId} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             <img src={product.image} alt="" className="h-10 w-10 rounded-md object-cover border border-gray-200" />
-                            {index < 3 && sortConfig.key === 'totalRevenue' && sortConfig.direction === 'desc' && (
+                            {index < 3 && sortConfig.key === 'revenue' && sortConfig.direction === 'desc' && (
                               <div className={`absolute -top-2 -right-2 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm ${index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-gray-400' : 'bg-orange-400'
                                 }`}>
                                 <Trophy className="h-3 w-3" />
@@ -198,17 +202,17 @@ export function ProductPerformancePage() {
                       </td>
                       <td className="px-6 py-4">{formatCurrency(product.price)}</td>
                       <td className="px-6 py-4 font-medium">{product.totalSold}</td>
-                      <td className="px-6 py-4 font-bold text-gray-900">{formatCurrency(product.totalRevenue)}</td>
+                      <td className="px-6 py-4 font-bold text-gray-900">{formatCurrency(product.revenue)}</td>
                       <td className="px-6 py-4 w-32">
                         <div className="flex flex-col gap-1">
                           <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
                             <div
                               className="h-full bg-emerald-500 rounded-full"
-                              style={{ width: `${(product.totalRevenue / maxRevenue) * 100}%` }}
+                              style={{ width: `${(product.revenue / maxRevenue) * 100}%` }}
                             />
                           </div>
                           <span className="text-[10px] text-gray-400 text-right">
-                            {Math.round((product.totalRevenue / maxRevenue) * 100)}% of top
+                            {Math.round((product.revenue / maxRevenue) * 100)}% of top
                           </span>
                         </div>
                       </td>

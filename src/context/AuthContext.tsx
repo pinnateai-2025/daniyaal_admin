@@ -17,8 +17,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // ✅ ADMIN CREDENTIALS (mock)
-const ADMIN_EMAIL = "daniyaalperfumery@gmail.com";
-const ADMIN_PASSWORD = "AmanKhan*1";
+const ADMIN_EMAIL = "admin@gmail.com";
+const ADMIN_PASSWORD = "Admin@1234";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);

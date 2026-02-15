@@ -18,21 +18,21 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
-          
+
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="users" element={<UsersPage />} />
-            
+
             {/* Product Routes */}
             <Route path="products" element={<ProductsPage />} />
             <Route path="products/new" element={<ProductForm />} />
             <Route path="products/:id" element={<ProductForm />} />
             <Route path="performance" element={<ProductPerformancePage />} /> {/* Added Route */}
-            
+
             {/* Order Routes */}
             <Route path="orders" element={<OrdersPage />} />
             <Route path="orders/:id" element={<OrderDetailsPage />} />
-            
+
             <Route path="sales" element={<SalesPage />} />
             <Route path="trends" element={<SalesPage />} />
           </Route>

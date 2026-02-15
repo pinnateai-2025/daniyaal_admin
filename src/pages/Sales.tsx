@@ -11,16 +11,18 @@ import {
   Line,
   Legend
 } from 'recharts';
-import { mockApi } from '../api/mock';
+import { adminService } from '../api/adminService';
 import { SalesData } from '../types';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { formatCurrency } from '../lib/utils';
 
 export function SalesPage() {
   const [data, setData] = useState<SalesData[]>([]);
+  const [summary, setSummary] = useState<any>(null);
 
   useEffect(() => {
-    mockApi.getSalesTrends(30).then(setData);
+    adminService.getSalesTrends(30).then(setData);
+    adminService.getSalesSummary('month').then(setSummary);
   }, []);
 
   const totalRevenue = data.reduce((acc, curr) => acc + (curr.revenue || 0), 0);
@@ -36,10 +38,12 @@ export function SalesPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="bg-indigo-50/50 border-indigo-100 shadow-sm">
           <CardHeader className="p-4 md:p-6">
-            <CardTitle className="text-xs md:text-sm font-medium text-indigo-900 uppercase tracking-wider">Total Revenue (30 Days)</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium text-indigo-900 uppercase tracking-wider">Total Revenue ({summary?.period || '30 Days'})</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
-            <div className="text-2xl md:text-3xl font-bold text-indigo-700">{formatCurrency(totalRevenue)}</div>
+            <div className="text-2xl md:text-3xl font-bold text-indigo-700">
+              {formatCurrency(summary?.totalRevenue ?? totalRevenue)}
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-rose-50/50 border-rose-100 shadow-sm">
@@ -47,7 +51,9 @@ export function SalesPage() {
             <CardTitle className="text-xs md:text-sm font-medium text-rose-900 uppercase tracking-wider">Total Refunds</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
-            <div className="text-2xl md:text-3xl font-bold text-rose-700">{formatCurrency(totalRefunds)}</div>
+            <div className="text-2xl md:text-3xl font-bold text-rose-700">
+              {formatCurrency(summary?.totalRefunds ?? totalRefunds)}
+            </div>
           </CardContent>
         </Card>
       </div>
