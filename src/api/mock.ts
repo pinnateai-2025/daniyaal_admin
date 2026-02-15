@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { DashboardStats, Order, Product, SalesData, User } from "../types";
 
 // Utility delay
@@ -6,84 +5,11 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // --- IN-MEMORY STORE (MOCK DATABASE) ---
 
-let products: Product[] = Array.from({ length: 20 }).map(() => {
-  const price = parseFloat(
-    faker.commerce.price({ min: 1000, max: 50000 })
-  );
+let products: Product[] = [];
 
-  const mrp = parseFloat(
-    (price * (1 + faker.number.float({ min: 0.1, max: 0.4 }))).toFixed(2)
-  );
+let categories: string[] = [];
 
-  return {
-    id: faker.string.uuid(),
-    name: faker.commerce.productName(),
-    description: faker.commerce.productDescription(),
-    image: faker.image.urlLoremFlickr({ category: "furniture" }),
-    price,
-    mrp: faker.datatype.boolean() ? mrp : undefined,
-    stock: faker.number.int({ min: 0, max: 100 }),
-    totalSold: faker.number.int({ min: 10, max: 1000 }),
-    totalRevenue: faker.number.float({ min: 10000, max: 500000 }),
-    category: faker.commerce.department(),
-    createdAt: faker.date.past().toISOString(),
-  };
-});
-
-let categories = Array.from(new Set(products.map((p) => p.category)));
-
-let orders: Order[] = Array.from({ length: 50 }).map(() => {
-  const itemsCount = faker.number.int({ min: 1, max: 4 });
-
-  const orderItems = Array.from({ length: itemsCount }).map(() => {
-    const product: Product = (faker.helpers as any).arrayElement(products);
-
-    return {
-      productId: product.id,
-      productName: product.name,
-      quantity: faker.number.int({ min: 1, max: 3 }),
-      price: product.price,
-      image: product.image,
-    };
-  });
-
-  const subtotal = orderItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  const tax = subtotal * 0.18;
-
-  return {
-    id: faker.string.nanoid(8).toUpperCase(),
-    customer: {
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      phone: faker.phone.number(),
-      address: faker.location.streetAddress(),
-      city: faker.location.city(),
-      zip: faker.location.zipCode(),
-    },
-    items: orderItems,
-    subtotal,
-    tax,
-    total: subtotal + tax,
-    status: (faker.helpers as any).arrayElement([
-        "pending",
-        "processing",
-        "shipped",
-        "delivered",
-        "cancelled",
-        ]),
-
-    paymentStatus: (faker.helpers as any).arrayElement(["paid", "paid", "unpaid"]),
-    paymentMethod: (faker.helpers as any).arrayElement(["Credit Card", "UPI", "Net Banking"]),
-    role: (faker.helpers as any).arrayElement(["customer", "customer", "admin"]),
-    date: faker.date.recent({ days: 30 }).toISOString(),
-    trackingNumber: faker.datatype.boolean()
-    ? faker.string.alphanumeric(12).toUpperCase()
-    : undefined,
-  };
-});
+let orders: Order[] = [];
 
 // --- MOCK API ---
 
@@ -106,23 +32,23 @@ export const mockApi = {
   getDashboardStats: async (): Promise<DashboardStats> => {
     await delay(600);
 
-    const topProduct = products.reduce((prev, curr) =>
-      prev.totalSold > curr.totalSold ? prev : curr
-    );
+    const topProduct = products.length > 0
+      ? products.reduce((prev, curr) => prev.totalSold > curr.totalSold ? prev : curr)
+      : null;
 
     return {
-      totalUsers: faker.number.int({ min: 1000, max: 5000 }),
+      totalUsers: 0,
       totalOrders: orders.length,
       totalSales: orders.reduce(
         (acc, o) => (o.paymentStatus === "paid" ? acc + o.total : acc),
         0
       ),
       pendingOrders: orders.filter((o) => o.status === "pending").length,
-      topProduct: {
+      topProduct: topProduct ? {
         name: topProduct.name,
         image: topProduct.image,
         sold: topProduct.totalSold,
-      },
+      } : undefined,
     };
   },
 
@@ -136,9 +62,9 @@ export const mockApi = {
       )
         .toISOString()
         .split("T")[0],
-      sales: faker.number.int({ min: 10, max: 100 }),
-      revenue: faker.number.int({ min: 20000, max: 100000 }),
-      refunds: faker.number.int({ min: 0, max: 5000 }),
+      sales: 0,
+      revenue: 0,
+      refunds: 0,
     }));
   },
 
@@ -159,20 +85,8 @@ export const mockApi = {
     await delay(600);
 
     return {
-      data: Array.from({ length: limit }).map(() => ({
-        id: faker.string.uuid(),
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        role: (faker.helpers as any).arrayElement([
-          "customer",
-          "customer",
-          "admin",
-        ]),
-        isVerified: faker.datatype.boolean(),
-        createdAt: faker.date.past().toISOString(),
-        avatar: faker.image.avatar(),
-      })),
-      total: 100,
+      data: [],
+      total: 0,
     };
   },
 
@@ -198,7 +112,7 @@ export const mockApi = {
     await delay(800);
 
     const newProduct: Product = {
-      id: faker.string.uuid(),
+      id: Math.random().toString(36).substring(2, 9),
       ...data,
       totalSold: 0,
       totalRevenue: 0,

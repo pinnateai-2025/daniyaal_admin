@@ -56,7 +56,7 @@ export interface DashboardStats {
   totalOrders: number;
   totalSales: number;
   pendingOrders: number;
-  topProduct: {
+  topProduct?: {
     name: string;
     image: string;
     sold: number;

@@ -50,46 +50,54 @@ export function UsersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <img src={user.avatar} alt="" className="h-10 w-10 rounded-full bg-gray-200" />
-                        <div>
-                          <div className="font-medium text-gray-900">{user.name}</div>
-                          <div className="text-gray-500">{user.email}</div>
+                {users.length > 0 ? (
+                  users.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <img src={user.avatar} alt="" className="h-10 w-10 rounded-full bg-gray-200" />
+                          <div>
+                            <div className="font-medium text-gray-900">{user.name}</div>
+                            <div className="text-gray-500">{user.email}</div>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <Badge variant={user.role === 'admin' ? 'default' : 'neutral'} className="capitalize">
-                        {user.role}
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-4">
-                      {user.isVerified ? (
-                        <div className="flex items-center text-green-600 gap-1.5">
-                          <CheckCircle className="h-4 w-4" /> Verified
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge variant={user.role === 'admin' ? 'default' : 'neutral'} className="capitalize">
+                          {user.role}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4">
+                        {user.isVerified ? (
+                          <div className="flex items-center text-green-600 gap-1.5">
+                            <CheckCircle className="h-4 w-4" /> Verified
+                          </div>
+                        ) : (
+                          <div className="flex items-center text-gray-400 gap-1.5">
+                            <XCircle className="h-4 w-4" /> Unverified
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">{formatDate(user.createdAt)}</td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(user.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                      ) : (
-                        <div className="flex items-center text-gray-400 gap-1.5">
-                          <XCircle className="h-4 w-4" /> Unverified
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">{formatDate(user.createdAt)}</td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button variant="ghost" size="icon">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(user.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                      No users found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
