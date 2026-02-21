@@ -21,16 +21,19 @@ export interface ProductPerformance {
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  description: string;
-  image: string;
+  description?: string;
+  imageUrl: string;
   price: number;
-  mrp?: number; // Maximum Retail Price (Fake Price for discount display)
+  mrp?: number;
   stock: number;
-  totalSold: number;
-  totalRevenue: number;
-  category: string;
+  size?: string;
+  fragranceNotes?: string;
+  category?: {
+    id: number;
+    name: string;
+  };
   createdAt: string;
 }
 
