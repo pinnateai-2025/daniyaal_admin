@@ -6,7 +6,7 @@ export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
 
   const fetchProducts = async () => {
-    const { data } = await apiClient.get("/products");
+    const { data } = await apiClient.get("/product");
     setProducts(data);
   };
 
@@ -16,7 +16,7 @@ export function ProductsPage() {
 
   const deleteProduct = async (id: string) => {
     if (window.confirm("Delete product?")) {
-      await apiClient.delete(`/products/${id}`);
+      await apiClient.delete(`/product/${id}`);
       fetchProducts();
     }
   };

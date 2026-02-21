@@ -9,15 +9,15 @@ export function OrderDetailsPage() {
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const { data } = await apiClient.get(`/orders/${id}`);
+      const { data } = await apiClient.get(`/order/${id}`);
       setOrder(data);
     };
     if (id) fetchOrder();
   }, [id]);
 
   const updateStatus = async (status: string) => {
-    await apiClient.put(`/orders/${id}/status`, { status });
-    const { data } = await apiClient.get(`/orders/${id}`);
+    await apiClient.put(`/order/${id}`, { status });
+    const { data } = await apiClient.get(`/order/${id}`);
     setOrder(data);
   };
 

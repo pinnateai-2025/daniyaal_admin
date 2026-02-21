@@ -12,7 +12,7 @@ export function ProductForm() {
 
   useEffect(() => {
     if (isEdit) {
-      apiClient.get(`/products/${id}`).then(({ data }) => {
+      apiClient.get(`/product/${id}`).then(({ data }) => {
         setName(data.name);
         setPrice(data.price);
       });
@@ -25,9 +25,9 @@ export function ProductForm() {
     const payload = { name, price: Number(price) };
 
     if (isEdit) {
-      await apiClient.put(`/products/${id}`, payload);
+      await apiClient.put(`/product/${id}`, payload);
     } else {
-      await apiClient.post("/products", payload);
+      await apiClient.post("/product", payload);
     }
 
     navigate("/products");

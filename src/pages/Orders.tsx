@@ -20,7 +20,7 @@ export function OrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data } = await apiClient.get("/orders");
+        const { data } = await apiClient.get("/order");
         setOrders(data);
       } catch (err) {
         console.error("Failed to fetch orders", err);
